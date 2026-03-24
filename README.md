@@ -12,7 +12,7 @@ A clean, Material Design-inspired Chrome extension to declutter your Twitch expe
 
 ## 📸 Preview
 
-*The popup features a modern Material Design interface with a purple Twitch-themed accent color.*
+<img width="355" height="195" alt="image" src="https://github.com/user-attachments/assets/6a5ebf83-969e-4cad-bb90-b0f309ee91bf" />
 
 ## 🚀 Installation (Developer Mode)
 
