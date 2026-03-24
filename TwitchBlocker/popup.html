@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup_style.css">
+</head>
+<body>
+  <div class="header">
+    <h2>Twitch Guard</h2>
+    <label class="switch">
+      <input type="checkbox" id="powerBtn">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="streamUrl" placeholder="Kanalname oder Link...">
+    <button id="addBtn">Hinzufügen</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <ul id="list">
+    </ul>
+
+  <script src="popup.js"></script>
+</body>
+</html>
