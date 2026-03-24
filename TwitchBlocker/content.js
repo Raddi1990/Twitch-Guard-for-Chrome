@@ -5,7 +5,6 @@ const hideBlockedStreams = () => {
     const isActive = res.filterActive !== false; // Default true
     const blocked = (res.blockedChannels || []).map(c => c.toLowerCase().trim());
 
-    // Wenn der Filter AUS ist: Alle versteckten Elemente wieder zeigen und abbrechen
     if (!isActive) {
       document.querySelectorAll('[data-blocked="true"]').forEach(el => {
         el.style.display = '';
@@ -46,7 +45,6 @@ const hideBlockedStreams = () => {
   });
 };
 
-// Initialisierung & Observer (wie bisher)
 const observer = new MutationObserver(() => hideBlockedStreams());
 observer.observe(document.body, { childList: true, subtree: true });
 setInterval(hideBlockedStreams, 1000);

@@ -1,7 +1,7 @@
 const input = document.getElementById('streamUrl');
 const list = document.getElementById('list');
 
-// Liste laden
+// list loading
 chrome.storage.local.get(['blockedChannels'], (res) => {
   const channels = res.blockedChannels || [];
   channels.forEach(renderChannel);
@@ -11,7 +11,7 @@ document.getElementById('addBtn').onclick = () => {
   const url = input.value.trim();
   if (!url) return;
   
-  // Extrahiere Kanalnamen aus URL (z.B. twitch.tv/username)
+  // extract channelname from url
   const channelName = url.split('/').pop().toLowerCase();
 
   chrome.storage.local.get(['blockedChannels'], (res) => {
@@ -43,13 +43,13 @@ function renderChannel(name) {
 
 const powerBtn = document.getElementById('powerBtn');
 
-// Status beim Öffnen laden
+// set status on open popup
 chrome.storage.local.get(['filterActive'], (res) => {
-  // Standardmäßig auf "true" setzen, wenn noch nie definiert
+  // default true
   powerBtn.checked = res.filterActive !== false;
 });
 
-// Status speichern bei Klick
+// safe status
 powerBtn.onchange = () => {
   chrome.storage.local.set({ filterActive: powerBtn.checked });
 };
@@ -71,13 +71,13 @@ function renderChannel(name) {
   list.appendChild(li);
 }
 
-// Button-Listener für das Hinzufügen
+// add-Btn Listener
 document.getElementById('addBtn').onclick = () => {
   const input = document.getElementById('streamUrl');
   let val = input.value.trim().toLowerCase();
   if (!val) return;
 
-  // Falls URL eingegeben wurde, nur den Namen nehmen
+  // check for if url was entered and trim it
   if (val.includes('twitch.tv/')) {
     val = val.split('twitch.tv/')[1].split('/')[0].split('?')[0];
   }
