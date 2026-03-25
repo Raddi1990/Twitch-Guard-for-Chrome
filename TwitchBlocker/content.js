@@ -1,3 +1,66 @@
+const blockChannel = (name) => {
+    const channelName = name.toLowerCase().trim();
+    chrome.storage.local.get(['blockedChannels'], (res) => {
+        const channels = res.blockedChannels || [];
+        if (!channels.includes(channelName)) {
+            const newList = [...channels, channelName];
+            chrome.storage.local.set({ blockedChannels: newList }, () => {
+                console.log(`%c[Twitch-Blocker] "${channelName}" zur Liste hinzugefügt.`, "color: #9146FF; font-weight: bold;");
+                hideBlockedStreams(); 
+            });
+        }
+    });
+};
+
+const injectBlockButtons = () => {
+    const unfollowBtn = document.querySelector('[data-a-target="unfollow-button"]');
+    const followBtn = document.querySelector('[data-a-target="follow-button"]');
+    const anchorBtn = unfollowBtn || followBtn;
+
+    if (anchorBtn) {
+        const parent = anchorBtn.parentElement;
+        if (parent && !parent.querySelector('.tg-block-btn')) {
+            
+            const channelPath = window.location.pathname.replace(/\//g, '').split('?')[0];
+            if (!channelPath || ['directory', 'following', 'search'].includes(channelPath)) return;
+
+            const btn = document.createElement('button');
+            btn.innerHTML = '🚫 Block'; 
+            btn.className = 'tg-block-btn';
+            
+            Object.assign(btn.style, {
+                backgroundColor: '#eb0400',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '0 10px',
+                marginLeft: '8px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                fontSize: '12px',
+                height: '30px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background-color 0.2s'
+            });
+
+            btn.onmouseover = () => btn.style.backgroundColor = '#ff2a26';
+            btn.onmouseout = () => btn.style.backgroundColor = '#eb0400';
+
+            btn.onclick = () => {
+                if (confirm(`Möchtest du "${channelPath}" wirklich blockieren?`)) {
+                    blockChannel(channelPath);
+                    window.location.href = 'https://www.twitch.tv';
+                }
+            };
+
+            anchorBtn.insertAdjacentElement('afterend', btn);
+            console.log(`%c[Twitch-Blocker] Button für "${channelPath}" injiziert.`, "color: green;");
+        }
+    }
+};
+
 const hideBlockedStreams = () => {
   if (!chrome.runtime?.id) return;
 
@@ -45,7 +108,13 @@ const hideBlockedStreams = () => {
   });
 };
 
-const observer = new MutationObserver(() => hideBlockedStreams());
+const observer = new MutationObserver(() => {
+  hideBlockedStreams();
+  injectBlockButtons();
+});
+
 observer.observe(document.body, { childList: true, subtree: true });
-setInterval(hideBlockedStreams, 1000);
+setInterval(injectBlockButton, 1500);
+setInterval(hideElements, 1500);
 hideBlockedStreams();
+injectBlockButtons();
